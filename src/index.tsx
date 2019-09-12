@@ -19,6 +19,9 @@ export const config = {
   },
   google: {
     clientId: process.env.REACT_APP_GOOGLE_CLIENT_ID
+  },
+  backend: {
+    url: process.env.REACT_APP_BACKEND_URL
   }
 };
 
