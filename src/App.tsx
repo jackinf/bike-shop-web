@@ -1,24 +1,42 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {useState} from 'react';
+import firebase from 'firebase/app';
+import GoogleLogin from 'react-google-login';
+import { config } from './index';
 
 const App: React.FC = () => {
+  const [token, setToken] = useState("");
+
+  const handleGoogleLoginSuccess = async (payload: any) => {
+    console.log(`Success!`, payload);
+    const credential = firebase.auth.GoogleAuthProvider.credential(payload.getAuthResponse().id_token);
+    const result = await firebase.auth().signInWithCredential(credential);
+    console.log(result);
+    const user: any = result.user;
+    const token = await user.getIdToken();
+    setToken(token);
+  };
+
+  const handleGoogleLoginFailure = (error: any) => {
+    console.error('Failed', error);
+  };
+
+  const googleClientId = config.google.clientId;
+  if (!googleClientId) {
+    return <div>No google Client Id specified</div>
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <GoogleLogin
+        clientId={googleClientId}
+        buttonText="Login"
+        onSuccess={handleGoogleLoginSuccess}
+        onFailure={handleGoogleLoginFailure}
+        cookiePolicy={'single_host_origin'}
+      />
+      <p>
+        {token}
+      </p>
     </div>
   );
 }
