@@ -12,8 +12,8 @@ const LoginLogout = (props: Props) => {
   return (
    <Context.Consumer>
      {(settings) => {
-       if (!settings) {
-         return <div>Initializing</div>
+       if (!settings || settings.loading) {
+         return <div>Loading</div>
        }
 
        const {

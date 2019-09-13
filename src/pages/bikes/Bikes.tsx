@@ -42,7 +42,7 @@ export default function Bikes() {
     if (!config.backend.url) {
       throw new Error("No backend url specified");
     } else {
-      fetch(config.backend.url)
+      fetch(`${config.backend.url}/bikes/search`)
         .then(resp => resp.json())
         .then(resp => setTileData(resp));
     }
