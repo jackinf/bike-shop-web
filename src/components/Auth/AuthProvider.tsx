@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import firebase from 'firebase/app';
+
 import { config } from '../../index';
 import { ContextSettings } from './types';
 import { GoogleLoginResponse } from 'react-google-login';
+import isUserEqual from './isUserEqual';
 
 interface Props {
   children: any;
 }
 
-export const Context = React.createContext<ContextSettings | null>({
+export const AuthContext = React.createContext<ContextSettings>({
   loading: true,
   token: undefined,
   handleGoogleLoginFailure: () => {},
@@ -16,20 +18,7 @@ export const Context = React.createContext<ContextSettings | null>({
   handleGoogleSignOut: () => {}
 });
 
-function isUserEqual(googleUser: GoogleLoginResponse, firebaseUser: firebase.User) {
-  const providerData = firebaseUser.providerData;
-  for (let i = 0; i < providerData.length; i++) {
-    const providerDataItem = providerData[i];
-    if (providerDataItem !== null && providerDataItem.providerId === firebase.auth.GoogleAuthProvider.PROVIDER_ID &&
-      providerDataItem.uid === googleUser.getBasicProfile().getId()) {
-      return true; // We don't need to re-auth the Firebase connection.
-    }
-  }
-
-  return false;
-}
-
-const AuthContext = (props: Props) => {
+const AuthProvider = (props: Props) => {
   const [token, setToken] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -77,7 +66,7 @@ const AuthContext = (props: Props) => {
   }
 
   return (
-    <Context.Provider value={{
+    <AuthContext.Provider value={{
       loading,
       token,
       handleGoogleLoginFailure,
@@ -85,8 +74,8 @@ const AuthContext = (props: Props) => {
       handleGoogleSignOut
     }}>
       {props.children}
-    </Context.Provider>
+    </AuthContext.Provider>
   );
 };
 
-export default AuthContext;
+export default AuthProvider;

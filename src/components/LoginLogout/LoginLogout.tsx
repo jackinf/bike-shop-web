@@ -1,7 +1,7 @@
 import React from 'react';
-import {GoogleLogin, GoogleLogout} from 'react-google-login';
+import {GoogleLogin} from 'react-google-login';
 import { config } from '../../index';
-import {Context} from '../Auth/AuthContext';
+import {AuthContext} from '../Auth/AuthProvider';
 
 interface Props {
   children: any;
@@ -10,34 +10,20 @@ interface Props {
 const LoginLogout = (props: Props) => {
   const googleClientId = config.google.clientId || '';
   return (
-   <Context.Consumer>
+   <AuthContext.Consumer>
      {(settings) => {
-       if (!settings || settings.loading) {
+       if (settings.loading) {
          return <div>Loading</div>
        }
 
        const {
          token,
          handleGoogleLoginSuccess,
-         handleGoogleSignOut,
          handleGoogleLoginFailure,
        } = settings;
 
        if (!!token) {
-         return (
-           <>
-             <GoogleLogout
-               clientId={googleClientId}
-               buttonText="Logout"
-               onLogoutSuccess={handleGoogleSignOut}
-             />
-             <p>
-               {token}
-             </p>
-
-             {props.children}
-           </>
-         )
+         return (props.children)
        }
 
        return (
@@ -51,7 +37,7 @@ const LoginLogout = (props: Props) => {
        )
 
      }}
-    </Context.Consumer>
+    </AuthContext.Consumer>
 
   );
 };
