@@ -1,6 +1,5 @@
 import React from 'react';
 import clsx from 'clsx';
-import { GoogleLogout } from 'react-google-login';
 import { withRouter } from "react-router-dom";
 import Toolbar from '@material-ui/core/Toolbar';
 import { IconButton, useTheme } from '@material-ui/core';
@@ -16,11 +15,10 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Drawer from '@material-ui/core/Drawer';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
+import DirectionsBikeIcon from '@material-ui/icons/DirectionsBike';
+import SettingsIcon from '@material-ui/icons/Settings';
 
 import { AuthContext } from '../Auth/AuthProvider';
-import { config } from '../../index';
 import useStyles from './useStyles';
 
 function Navbar({history}: any) {
@@ -59,15 +57,7 @@ function Navbar({history}: any) {
             Bike Shop
           </Typography>
           <AuthContext.Consumer>
-            {({handleGoogleSignOut}) => (
-              <GoogleLogout
-                clientId={config.google.clientId || ''}
-                onLogoutSuccess={handleGoogleSignOut}
-                render={({onClick}) => (
-                  <Button color="inherit" onClick={onClick}>Log out</Button>
-                )}
-              />
-            )}
+            {({handleLogout}) => <Button color="inherit" onClick={handleLogout}>Log out</Button>}
           </AuthContext.Consumer>
         </Toolbar>
       </AppBar>
@@ -94,7 +84,7 @@ function Navbar({history}: any) {
         <List>
           <ListItem button key="Bikes" onClick={() => history.push('/bikes')}>
             <ListItemIcon>
-              <MailIcon />
+              <DirectionsBikeIcon />
             </ListItemIcon>
             <ListItemText primary="Bikes" />
           </ListItem>
@@ -103,7 +93,7 @@ function Navbar({history}: any) {
         <List>
           <ListItem button key="Account" onClick={() => history.push('/account')}>
             <ListItemIcon>
-              <InboxIcon />
+              <SettingsIcon />
             </ListItemIcon>
             <ListItemText primary="Account" />
           </ListItem>

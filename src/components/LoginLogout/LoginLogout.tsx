@@ -1,41 +1,25 @@
 import React from 'react';
-import {GoogleLogin} from 'react-google-login';
-import { config } from '../../index';
 import {AuthContext} from '../Auth/AuthProvider';
+import Login from './Login';
 
 interface Props {
   children: any;
 }
 
 const LoginLogout = (props: Props) => {
-  const googleClientId = config.google.clientId || '';
   return (
    <AuthContext.Consumer>
-     {(settings) => {
-       if (settings.loading) {
+     {({ loading, token }) => {
+       if (loading) {
          return <div>Loading</div>
        }
 
-       const {
-         token,
-         handleGoogleLoginSuccess,
-         handleGoogleLoginFailure,
-       } = settings;
-
+       // Is user logged in?
        if (!!token) {
-         return (props.children)
+         return props.children;
+       } else {
+         return <Login />;
        }
-
-       return (
-         <GoogleLogin
-           clientId={googleClientId}
-           buttonText="Login"
-           onSuccess={handleGoogleLoginSuccess}
-           onFailure={handleGoogleLoginFailure}
-           cookiePolicy={'single_host_origin'}
-         />
-       )
-
      }}
     </AuthContext.Consumer>
 
