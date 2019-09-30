@@ -22,17 +22,11 @@ export interface EnhancedTableToolbarProps {
   numSelected: number;
   total: number;
   everythingSelected: boolean;
+  onSearchFieldChange: React.ChangeEventHandler<HTMLTextAreaElement | HTMLInputElement>;
+  onSearchFieldKeyDown: React.KeyboardEventHandler<HTMLTextAreaElement | HTMLInputElement>;
 }
 
 export type Order = 'asc' | 'desc';
-
-// export interface Data {
-//   calories: number;
-//   carbs: number;
-//   fat: number;
-//   name: string;
-//   protein: number;
-// }
 
 export interface SearchParameters {
   filterKeyword?: string;
@@ -54,4 +48,9 @@ export interface BikesTableItem {
   price: number;
   stars: number;
   createdOn: string;
+}
+
+export interface SearchFieldProps {
+  onChange: React.ChangeEventHandler<HTMLTextAreaElement | HTMLInputElement>;
+  onKeyDown: React.KeyboardEventHandler<HTMLTextAreaElement | HTMLInputElement>;
 }

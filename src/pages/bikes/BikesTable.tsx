@@ -18,6 +18,7 @@ export default function BikesTable(props: BikesTableProps) {
   const classes = useStyles();
   const [order, setOrder] = React.useState<Order>('asc');
   const [orderBy, setOrderBy] = React.useState<keyof BikesTableItem>('createdOn');
+  const [keyword, setKeyword] = React.useState<string>('');
   const [selected, setSelected] = React.useState<string[]>([]);
   const [page, setPage] = React.useState(0);
   const [everythingSelected, setEverythingSelected] = React.useState(false);
@@ -46,7 +47,8 @@ export default function BikesTable(props: BikesTableProps) {
       page: page,
       rowsPerPage: rowsPerPage,
       orderColumn: orderBy,
-      orderDirection: orderDirection
+      orderDirection: orderDirection,
+      filterKeyword: keyword,
     });
   };
 
@@ -80,7 +82,8 @@ export default function BikesTable(props: BikesTableProps) {
       page: newPage,
       rowsPerPage: rowsPerPage,
       orderColumn: orderBy,
-      orderDirection: order
+      orderDirection: order,
+      filterKeyword: keyword,
     });
   };
 
@@ -92,8 +95,24 @@ export default function BikesTable(props: BikesTableProps) {
       page: 0,
       rowsPerPage: +event.target.value,
       orderColumn: orderBy,
-      orderDirection: order
+      orderDirection: order,
+      filterKeyword: keyword,
     });
+  };
+
+  const handleSearchFieldChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    setKeyword(event.target.value);
+  };
+  const handleSearchFieldKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    if (event.keyCode === 13) { // if enter was pressed
+      handleSearch({
+        page: page,
+        rowsPerPage: rowsPerPage,
+        orderColumn: orderBy,
+        orderDirection: order,
+        filterKeyword: keyword,
+      });
+    }
   };
 
   const handleChangeDense = (event: React.ChangeEvent<HTMLInputElement>) => setDense(event.target.checked);
@@ -108,6 +127,8 @@ export default function BikesTable(props: BikesTableProps) {
           numSelected={selected.length}
           total={total}
           everythingSelected={everythingSelected}
+          onSearchFieldChange={handleSearchFieldChange}
+          onSearchFieldKeyDown={handleSearchFieldKeyDown}
         />
         <div className={classes.tableWrapper}>
           <Table

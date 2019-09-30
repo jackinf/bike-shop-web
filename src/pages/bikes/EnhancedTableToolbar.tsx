@@ -9,10 +9,11 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 
 import { useToolbarStyles } from './styles';
 import { EnhancedTableToolbarProps } from './types';
+import SearchField from './SearchField';
 
 export default function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
   const classes = useToolbarStyles();
-  const { numSelected, total, everythingSelected } = props;
+  const { numSelected, total, everythingSelected, onSearchFieldChange, onSearchFieldKeyDown } = props;
   const showSelectedNr = everythingSelected ? total - numSelected : numSelected;
 
   return (
@@ -33,6 +34,9 @@ export default function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
         )}
       </div>
       <div className={classes.spacer} />
+      <div className={classes.spacer}>
+        <SearchField onChange={onSearchFieldChange} onKeyDown={onSearchFieldKeyDown} />
+      </div>
       <div className={classes.actions}>
         {showSelectedNr > 0 ? (
           <Tooltip title="Delete">
