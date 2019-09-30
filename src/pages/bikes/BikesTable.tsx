@@ -8,6 +8,7 @@ import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
+import Rating from '@material-ui/lab/Rating';
 
 import { BikesTableItem, BikesTableProps, Order } from './types';
 import { EnhancedTableHead } from './EnhancedTableHead';
@@ -175,7 +176,9 @@ export default function BikesTable(props: BikesTableProps) {
                       {row.title}
                     </TableCell>
                     <TableCell align="right">{row.price}</TableCell>
-                    <TableCell align="right">{row.stars}</TableCell>
+                    <TableCell align="right">
+                      <Rating value={row.stars} readOnly />
+                    </TableCell>
                     <TableCell align="right">{row.createdOn}</TableCell>
                   </TableRow>
                 )

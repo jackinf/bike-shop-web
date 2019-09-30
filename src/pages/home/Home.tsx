@@ -18,10 +18,7 @@ const useStyles = makeStyles((theme: Theme) =>
       overflow: 'hidden',
       backgroundColor: theme.palette.background.paper,
     },
-    gridList: {
-      width: 500,
-      height: 450,
-    },
+    gridList: {},
     icon: {
       color: 'rgba(255, 255, 255, 0.54)',
     },
@@ -45,7 +42,7 @@ export default function Home() {
     } else {
       fetch(`${config.backend.url}/bikes/search`)
         .then(resp => resp.json())
-        .then(resp => setTileData(resp));
+        .then(resp => setTileData(resp.items));
     }
   }, []);
 

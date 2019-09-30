@@ -54,3 +54,8 @@ export interface SearchFieldProps {
   onChange: React.ChangeEventHandler<HTMLTextAreaElement | HTMLInputElement>;
   onKeyDown: React.KeyboardEventHandler<HTMLTextAreaElement | HTMLInputElement>;
 }
+
+export interface BikeSearchResult {
+  items: BikesTableItem[];
+  total: number;
+}
