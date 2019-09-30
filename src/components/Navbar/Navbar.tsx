@@ -25,14 +25,16 @@ function Navbar({history}: any) {
   const classes = useStyles();
   const theme = useTheme();
 
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(localStorage.getItem('navbarOpen') === 'true');
 
   function handleDrawerOpen() {
     setOpen(true);
+    localStorage.setItem('navbarOpen', 'true');
   }
 
   function handleDrawerClose() {
     setOpen(false);
+    localStorage.setItem('navbarOpen', 'false');
   }
 
   return (

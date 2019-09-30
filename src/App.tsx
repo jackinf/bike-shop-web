@@ -10,6 +10,8 @@ import Navbar from './components/Navbar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import useStyles from './useStyles';
 
+import Home from './pages/home';
+
 const App: React.FC = () => {
   const classes = useStyles();
   return (
@@ -22,6 +24,7 @@ const App: React.FC = () => {
             <main className={classes.content}>
               <div className={classes.toolbar} />
               <Container>
+                <Route exact path="/" component={Home} />
                 <Route exact path="/bikes" component={Bikes} />
                 <Route exact path="/account" component={Account} />
               </Container>

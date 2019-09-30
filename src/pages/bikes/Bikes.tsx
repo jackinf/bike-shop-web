@@ -1,12 +1,8 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
-import GridList from '@material-ui/core/GridList';
-import GridListTile from '@material-ui/core/GridListTile';
-import GridListTileBar from '@material-ui/core/GridListTileBar';
-import ListSubheader from '@material-ui/core/ListSubheader';
-import IconButton from '@material-ui/core/IconButton';
-import InfoIcon from '@material-ui/icons/Info';
 import { config } from '../../index';
+import BikesTable from './BikesTable';
+import { BikesTableItem, SearchParameters } from './types';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -27,48 +23,41 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface Tile {
-  image: string;
-  price: number;
-  stars: number;
-  title: string;
-}
-
 export default function Bikes() {
   const classes = useStyles();
-  const [tileData, setTileData] = useState<Tile[]>([]);
+  const [items, setItems] = useState<BikesTableItem[]>([]);
+  const [total] = useState<number>(999);
 
-  useEffect(() => {
+  const handleSearch = ({ filterKeyword, page, rowsPerPage, orderColumn, orderDirection }: SearchParameters) => {
     if (!config.backend.url) {
       throw new Error("No backend url specified");
     } else {
-      fetch(`${config.backend.url}/bikes/search`)
+      const urlParams = new URLSearchParams();
+      if (filterKeyword) {
+        urlParams.append('filter_keyword', filterKeyword);
+      }
+      if (page) {
+        urlParams.append('page', `${page}`);
+      }
+      if (rowsPerPage) {
+        urlParams.append('rows_per_page', `${rowsPerPage}`);
+      }
+      if (orderColumn) {
+        urlParams.append('order_column', orderColumn);
+      }
+      if (orderDirection) {
+        urlParams.append('order_direction', orderDirection);
+      }
+
+      fetch(`${config.backend.url}/bikes/search?${urlParams.toString()}`)
         .then(resp => resp.json())
-        .then(resp => setTileData(resp));
+        .then(resp => setItems(resp));
     }
-  }, []);
+  };
 
   return (
     <div className={classes.root}>
-      <GridList cellHeight={180} className={classes.gridList}>
-        <GridListTile key="Subheader" cols={2} style={{ height: 'auto' }}>
-          <ListSubheader component="div">Bikes</ListSubheader>
-        </GridListTile>
-        {tileData.map((tile: Tile) => (
-          <GridListTile key={tile.image}>
-            <img src={tile.image} alt={tile.title} />
-            <GridListTileBar
-              title={tile.title}
-              subtitle={<span>price: {tile.price}</span>}
-              actionIcon={
-                <IconButton aria-label={`info about ${tile.title}`} className={classes.icon}>
-                  <InfoIcon />
-                </IconButton>
-              }
-            />
-          </GridListTile>
-        ))}
-      </GridList>
+      <BikesTable handleSearch={handleSearch} items={items} total={total} />
     </div>
   );
 }
