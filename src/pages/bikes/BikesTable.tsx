@@ -33,18 +33,20 @@ export default function BikesTable(props: BikesTableProps) {
       orderColumn: orderBy,
       orderDirection: order
     });
-  }, []);
+    // eslint-disable-next-line
+  }, []); // TODO: use a single object and react to the changes of that object
 
   const handleRequestSort = (event: React.MouseEvent<unknown>, property: keyof BikesTableItem) => {
     const isDesc = orderBy === property && order === 'desc';
-    setOrder(isDesc ? 'asc' : 'desc');
+    const orderDirection = isDesc ? 'asc' : 'desc';
+    setOrder(orderDirection);
     setOrderBy(property);
 
     handleSearch({
       page: page,
       rowsPerPage: rowsPerPage,
       orderColumn: orderBy,
-      orderDirection: order
+      orderDirection: orderDirection
     });
   };
 
