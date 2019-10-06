@@ -15,6 +15,7 @@ import { useStyles } from './styles';
 import { EnhancedTableHead } from '../../components/EnchancedTableHead/EnhancedTableHead';
 import EnhancedTableToolbar from '../../components/EnhancedTableToolbar/EnhancedTableToolbar';
 import { Order, SearchParameters } from '../../types';
+import calculateSelectedItemsForTable from '../../helpers/calculateSelectedItemsForTable';
 
 export default function BikesTable(props: BikesTableProps) {
   const classes = useStyles();
@@ -57,16 +58,10 @@ export default function BikesTable(props: BikesTableProps) {
   }, [searchParams]);
 
   const handleRequestSort = (event: React.MouseEvent<unknown>, property: keyof any) => {
-    const { page, rowsPerPage, filterKeyword: keyword, orderDirection: order, orderColumn: orderBy } = searchParams;
-    const isDesc = orderBy === property && order === 'desc';
-    const orderDirection = isDesc ? 'asc' : 'desc';
-
+    const { orderDirection, orderColumn } = searchParams;
     setSearchParams({
-      page: page,
-      rowsPerPage: rowsPerPage,
-      orderColumn: orderBy,
-      orderDirection: orderDirection,
-      filterKeyword: keyword,
+      ...searchParams,
+      orderDirection: orderColumn === property && orderDirection === 'desc' ? 'asc' : 'desc',
     });
   };
 
@@ -75,46 +70,21 @@ export default function BikesTable(props: BikesTableProps) {
   };
 
   const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected: string[] = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
-    }
-
-    setSelected(newSelected);
+    setSelected(calculateSelectedItemsForTable(selected, name));
   };
 
   const handleChangePage = (event: unknown, newPage: number) => {
-    setSearchParams({
-      ...searchParams,
-      page: newPage,
-    });
+    setSearchParams({ ...searchParams, page: newPage });
   };
 
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { orderColumn, orderDirection, filterKeyword } = searchParams;
-    setSearchParams({
-      page: 0,
-      rowsPerPage: +event.target.value,
-      orderColumn,
-      orderDirection,
-      filterKeyword,
-    });
+    setSearchParams({ ...searchParams, page: 0, rowsPerPage: +event.target.value });
   };
 
   const handleSearchFieldChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     setKeyword(event.target.value);
   };
+
   const handleSearchFieldKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     if (event.keyCode === 13) { // if enter was pressed
       handleSearch({ ...searchParams, filterKeyword: keyword });
