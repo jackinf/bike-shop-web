@@ -16,8 +16,9 @@ import { EnhancedTableHead } from '../../../../components/EnchancedTableHead/Enh
 import EnhancedTableToolbar from '../../../../components/EnhancedTableToolbar/EnhancedTableToolbar';
 import { Order, SearchParameters } from '../../../../types';
 import calculateSelectedItemsForTable from '../../../../helpers/calculateSelectedItemsForTable';
+import ActionMenu from '../ActionMenu';
 
-export default function BikeTypesTable(props: BikeTypesTableProps) {
+export default function BikeTypesTable(props: BikeTypesTableProps & {history: any}) {
   const classes = useStyles();
   const [keyword, setKeyword] = React.useState<string>('');
   const [selected, setSelected] = React.useState<string[]>([]);
@@ -32,7 +33,7 @@ export default function BikeTypesTable(props: BikeTypesTableProps) {
     filterKeyword: ''
   });
 
-  const { handleSearch, items: rows, total } = props;
+  const { handleSearch, items: rows, total, history } = props;
 
   // TODO: resolve defaults
   const { page: p, rowsPerPage: rpp, orderDirection, orderColumn } = searchParams;
@@ -119,6 +120,7 @@ export default function BikeTypesTable(props: BikeTypesTableProps) {
                 { id: 'title', numeric: false, disablePadding: true, label: 'Title' },
                 { id: 'stars', numeric: true, disablePadding: false, label: 'Stars' },
                 { id: 'created_on', numeric: false, disablePadding: false, label: 'Created on' },
+                { id: 'actions', numeric: false, disablePadding: false, label: '' },
               ]}
               numSelected={everythingSelected ? total : selected.length}
               order={order}
@@ -160,6 +162,11 @@ export default function BikeTypesTable(props: BikeTypesTableProps) {
                       <Rating value={row.stars} readOnly />
                     </TableCell>
                     <TableCell align="right">{row.created_on}</TableCell>
+                    <TableCell align="right">
+                      <ActionMenu
+                        onViewClick={() => history.push(`/bikes/${row.id}`)}
+                      />
+                    </TableCell>
                   </TableRow>
                 )
               })}

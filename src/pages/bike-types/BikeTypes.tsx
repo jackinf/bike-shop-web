@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { withRouter } from 'react-router-dom';
 
 import { config } from '../../index';
 import BikeTypesTable from './components/BikeTypesTable';
@@ -8,7 +9,7 @@ import { SearchParameters } from '../../types';
 import { useStyles } from './styles';
 import { BikeTypeSearchResult, BikeTypeTableItem } from './components/BikeTypesTable/types';
 
-export default function BikeTypes() {
+function BikeTypes({history}: any) {
   const classes = useStyles();
   const [items, setItems] = useState<BikeTypeTableItem[]>([]);
   const [total, setTotal] = useState<number>(0);
@@ -35,8 +36,10 @@ export default function BikeTypes() {
 
   return (
     <div className={classes.root}>
-      <BikeTypesTable handleSearch={handleSearch} items={items} total={total} />
+      <BikeTypesTable handleSearch={handleSearch} items={items} total={total} history={history} />
       {loading && <CircularProgress className={classes.progress} />}
     </div>
   );
 }
+
+export default withRouter(BikeTypes);

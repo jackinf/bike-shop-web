@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { withRouter } from 'react-router-dom'
 
 import { config } from '../../index';
 import BikesTable from './components/BikesTable/BikesTable';
@@ -8,7 +9,7 @@ import composeSearchUrlParams from '../../helpers/composeSearchUrlParams';
 import { SearchParameters } from '../../types';
 import { useStyles } from './styles';
 
-export default function Bikes() {
+function Bikes(props: any) {
   const classes = useStyles();
   const [items, setItems] = useState<BikesTableItem[]>([]);
   const [total, setTotal] = useState<number>(0);
@@ -21,7 +22,9 @@ export default function Bikes() {
       const urlParams = composeSearchUrlParams(searchParameters);
       setLoading(true);
 
-      fetch(`${config.backend.url}/bikes/search?${urlParams.toString()}`)
+      const bikeTypeId = props.match.params["bike_type_id"];
+
+      fetch(`${config.backend.url}/bikes/search/${bikeTypeId}?${urlParams.toString()}`)
         .then(resp => resp.json())
         .then((resp: BikeSearchResult) => {
           setItems(resp.items);
@@ -40,3 +43,5 @@ export default function Bikes() {
     </div>
   );
 }
+
+export default withRouter(Bikes);

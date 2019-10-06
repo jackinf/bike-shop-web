@@ -26,7 +26,7 @@ const App: React.FC = () => {
               <div className={classes.toolbar} />
               <Container>
                 <Route exact path="/" component={Home} />
-                <Route exact path="/bikes" component={Bikes} />
+                <Route exact path="/bikes/:bike_type_id" component={Bikes} />
                 <Route exact path="/bike-types" component={BikeTypes} />
                 <Route exact path="/account" component={Account} />
               </Container>
