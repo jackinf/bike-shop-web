@@ -101,7 +101,7 @@ function Navbar({history}: any) {
             <ListItemIcon>
               <DirectionsBikeIcon />
             </ListItemIcon>
-            <ListItemText primary="BikeTypes" />
+            <ListItemText primary="Bike Types" />
           </ListItem>
         </List>
         <Divider />

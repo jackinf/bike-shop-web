@@ -1,5 +1,5 @@
 import React from 'react';
-import { SearchParameters } from '../../types';
+import { SearchParameters } from '../../../../types';
 
 export interface BikesTableProps {
   handleSearch: (searchParameters: SearchParameters) => void;
@@ -9,10 +9,11 @@ export interface BikesTableProps {
 
 export interface BikesTableItem {
   id: string;
-  title: string;
-  price: number;
-  stars: number;
-  createdOn: string;
+  user: string;
+  purchase_price: number;
+  selling_price: number;
+  status: string;
+  created_on: string;
 }
 
 export interface BikeSearchResult {

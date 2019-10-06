@@ -1,4 +1,4 @@
-import { useStyles } from '../../pages/bikes/styles';
+import { useStyles } from '../../pages/bikes/components/BikesTable/styles';
 import React from 'react';
 import { Order } from '../../types';
 

@@ -8,14 +8,13 @@ import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
-import Rating from '@material-ui/lab/Rating';
 
 import { BikesTableProps } from './types';
 import { useStyles } from './styles';
-import { EnhancedTableHead } from '../../components/EnchancedTableHead/EnhancedTableHead';
-import EnhancedTableToolbar from '../../components/EnhancedTableToolbar/EnhancedTableToolbar';
-import { Order, SearchParameters } from '../../types';
-import calculateSelectedItemsForTable from '../../helpers/calculateSelectedItemsForTable';
+import { EnhancedTableHead } from '../../../../components/EnchancedTableHead/EnhancedTableHead';
+import EnhancedTableToolbar from '../../../../components/EnhancedTableToolbar/EnhancedTableToolbar';
+import { Order, SearchParameters } from '../../../../types';
+import calculateSelectedItemsForTable from '../../../../helpers/calculateSelectedItemsForTable';
 
 export default function BikesTable(props: BikesTableProps) {
   const classes = useStyles();
@@ -61,6 +60,7 @@ export default function BikesTable(props: BikesTableProps) {
     const { orderDirection, orderColumn } = searchParams;
     setSearchParams({
       ...searchParams,
+      orderColumn: property as string,
       orderDirection: orderColumn === property && orderDirection === 'desc' ? 'asc' : 'desc',
     });
   };
@@ -103,7 +103,7 @@ export default function BikesTable(props: BikesTableProps) {
           everythingSelected={everythingSelected}
           onSearchFieldChange={handleSearchFieldChange}
           onSearchFieldKeyDown={handleSearchFieldKeyDown}
-          label="Bikes"
+          label="Warehouse"
         />
         <div className={classes.tableWrapper}>
           <Table
@@ -115,10 +115,11 @@ export default function BikesTable(props: BikesTableProps) {
               classes={classes}
               headCells={[
                 { id: 'id', numeric: false, disablePadding: true, label: 'ID' },
-                { id: 'title', numeric: false, disablePadding: true, label: 'Title' },
-                { id: 'price', numeric: true, disablePadding: false, label: 'Price (EUR)' },
-                { id: 'stars', numeric: true, disablePadding: false, label: 'Stars' },
-                { id: 'createdOn', numeric: false, disablePadding: false, label: 'Created on' },
+                { id: 'user', numeric: false, disablePadding: true, label: 'User' },
+                { id: 'status', numeric: false, disablePadding: false, label: 'Status' },
+                { id: 'purchase_price', numeric: true, disablePadding: false, label: 'Purchase Price' },
+                { id: 'selling_price', numeric: true, disablePadding: false, label: 'Selling Price' },
+                { id: 'created_on', numeric: false, disablePadding: false, label: 'Created on' },
               ]}
               numSelected={everythingSelected ? total : selected.length}
               order={order}
@@ -154,13 +155,12 @@ export default function BikesTable(props: BikesTableProps) {
                       {row.id}
                     </TableCell>
                     <TableCell component="th" id={labelId} scope="row" padding="none">
-                      {row.title}
+                      {row.user}
                     </TableCell>
-                    <TableCell align="right">{row.price}</TableCell>
-                    <TableCell align="right">
-                      <Rating value={row.stars} readOnly />
-                    </TableCell>
-                    <TableCell align="right">{row.createdOn}</TableCell>
+                    <TableCell align="right">{row.status}</TableCell>
+                    <TableCell align="right">{row.purchase_price}</TableCell>
+                    <TableCell align="right">{row.selling_price}</TableCell>
+                    <TableCell align="right">{row.created_on}</TableCell>
                   </TableRow>
                 )
               })}

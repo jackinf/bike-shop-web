@@ -1,33 +1,12 @@
 import React, {useState} from 'react';
-import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
-import { config } from '../../index';
-import BikesTable from './BikesTable';
-import { BikeSearchResult, BikesTableItem } from './types';
 import CircularProgress from '@material-ui/core/CircularProgress';
+
+import { config } from '../../index';
+import BikesTable from './components/BikesTable/BikesTable';
+import { BikeSearchResult, BikesTableItem } from './components/BikesTable/types';
 import composeSearchUrlParams from '../../helpers/composeSearchUrlParams';
 import { SearchParameters } from '../../types';
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      display: 'flex',
-      flexWrap: 'wrap',
-      justifyContent: 'space-around',
-      overflow: 'hidden',
-      backgroundColor: theme.palette.background.paper,
-    },
-    gridList: {
-      width: 500,
-      height: 450,
-    },
-    icon: {
-      color: 'rgba(255, 255, 255, 0.54)',
-    },
-    progress: {
-      margin: theme.spacing(2),
-    }
-  }),
-);
+import { useStyles } from './styles';
 
 export default function Bikes() {
   const classes = useStyles();
