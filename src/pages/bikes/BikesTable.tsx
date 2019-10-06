@@ -10,41 +10,58 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import Rating from '@material-ui/lab/Rating';
 
-import { BikesTableItem, BikesTableProps, Order } from './types';
-import { EnhancedTableHead } from './EnhancedTableHead';
+import { BikesTableProps } from './types';
 import { useStyles } from './styles';
-import EnhancedTableToolbar from './EnhancedTableToolbar';
+import { EnhancedTableHead } from '../../components/EnchancedTableHead/EnhancedTableHead';
+import EnhancedTableToolbar from '../../components/EnhancedTableToolbar/EnhancedTableToolbar';
+import { Order, SearchParameters } from '../../types';
 
 export default function BikesTable(props: BikesTableProps) {
   const classes = useStyles();
-  const [order, setOrder] = React.useState<Order>('asc');
-  const [orderBy, setOrderBy] = React.useState<keyof BikesTableItem>('createdOn');
   const [keyword, setKeyword] = React.useState<string>('');
   const [selected, setSelected] = React.useState<string[]>([]);
-  const [page, setPage] = React.useState(0);
   const [everythingSelected, setEverythingSelected] = React.useState(false);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  const [searchParams, setSearchParams] = React.useState<SearchParameters>({
+    page: 0,
+    orderDirection: 'asc',
+    orderColumn: 'createdOn',
+    rowsPerPage: 5,
+    filterKeyword: ''
+  });
 
   const { handleSearch, items: rows, total } = props;
 
-  useEffect(() => {
-    handleSearch({
-      page: page,
-      rowsPerPage: rowsPerPage,
-      orderColumn: orderBy,
-      orderDirection: order
-    });
-    // eslint-disable-next-line
-  }, []); // TODO: use a single object and react to the changes of that object
+  // TODO: resolve defaults
+  const { page: p, rowsPerPage: rpp, orderDirection, orderColumn } = searchParams;
+  const page = p || 0;
+  const rowsPerPage = rpp || 5;
+  const order = orderDirection ? (orderDirection as Order) : 'asc';
+  const orderBy = orderColumn || 'createdOn';
+  const emptyRows = rowsPerPage - Math.min(rowsPerPage, total - page * rowsPerPage);
 
-  const handleRequestSort = (event: React.MouseEvent<unknown>, property: keyof BikesTableItem) => {
+  useEffect(() => {
+    handleSearch(searchParams);
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    if (keyword) {
+      handleSearch({...searchParams, filterKeyword: keyword});
+      setKeyword('');
+    } else {
+      handleSearch(searchParams);
+    }
+    // eslint-disable-next-line
+  }, [searchParams]);
+
+  const handleRequestSort = (event: React.MouseEvent<unknown>, property: keyof any) => {
+    const { page, rowsPerPage, filterKeyword: keyword, orderDirection: order, orderColumn: orderBy } = searchParams;
     const isDesc = orderBy === property && order === 'desc';
     const orderDirection = isDesc ? 'asc' : 'desc';
-    setOrder(orderDirection);
-    setOrderBy(property);
 
-    handleSearch({
+    setSearchParams({
       page: page,
       rowsPerPage: rowsPerPage,
       orderColumn: orderBy,
@@ -78,26 +95,20 @@ export default function BikesTable(props: BikesTableProps) {
   };
 
   const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
-    handleSearch({
+    setSearchParams({
+      ...searchParams,
       page: newPage,
-      rowsPerPage: rowsPerPage,
-      orderColumn: orderBy,
-      orderDirection: order,
-      filterKeyword: keyword,
     });
   };
 
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-
-    handleSearch({
+    const { orderColumn, orderDirection, filterKeyword } = searchParams;
+    setSearchParams({
       page: 0,
       rowsPerPage: +event.target.value,
-      orderColumn: orderBy,
-      orderDirection: order,
-      filterKeyword: keyword,
+      orderColumn,
+      orderDirection,
+      filterKeyword,
     });
   };
 
@@ -106,20 +117,12 @@ export default function BikesTable(props: BikesTableProps) {
   };
   const handleSearchFieldKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     if (event.keyCode === 13) { // if enter was pressed
-      handleSearch({
-        page: page,
-        rowsPerPage: rowsPerPage,
-        orderColumn: orderBy,
-        orderDirection: order,
-        filterKeyword: keyword,
-      });
+      handleSearch({ ...searchParams, filterKeyword: keyword });
     }
   };
 
   const handleChangeDense = (event: React.ChangeEvent<HTMLInputElement>) => setDense(event.target.checked);
   const isSelected = (id: string) => selected.indexOf(id) !== -1;
-
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, total - page * rowsPerPage);
 
   return (
     <div className={classes.root}>
@@ -130,6 +133,7 @@ export default function BikesTable(props: BikesTableProps) {
           everythingSelected={everythingSelected}
           onSearchFieldChange={handleSearchFieldChange}
           onSearchFieldKeyDown={handleSearchFieldKeyDown}
+          label="Bikes"
         />
         <div className={classes.tableWrapper}>
           <Table
@@ -139,7 +143,14 @@ export default function BikesTable(props: BikesTableProps) {
           >
             <EnhancedTableHead
               classes={classes}
-              numSelected={everythingSelected ? total : selected.length /* TODO: pass rows total when everything is selected*/}
+              headCells={[
+                { id: 'id', numeric: false, disablePadding: true, label: 'ID' },
+                { id: 'title', numeric: false, disablePadding: true, label: 'Title' },
+                { id: 'price', numeric: true, disablePadding: false, label: 'Price (EUR)' },
+                { id: 'stars', numeric: true, disablePadding: false, label: 'Stars' },
+                { id: 'createdOn', numeric: false, disablePadding: false, label: 'Created on' },
+              ]}
+              numSelected={everythingSelected ? total : selected.length}
               order={order}
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}

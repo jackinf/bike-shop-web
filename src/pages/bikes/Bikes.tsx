@@ -2,8 +2,10 @@ import React, {useState} from 'react';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import { config } from '../../index';
 import BikesTable from './BikesTable';
-import { BikeSearchResult, BikesTableItem, SearchParameters } from './types';
+import { BikeSearchResult, BikesTableItem } from './types';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import composeSearchUrlParams from '../../helpers/composeSearchUrlParams';
+import { SearchParameters } from '../../types';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -33,26 +35,11 @@ export default function Bikes() {
   const [total, setTotal] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const handleSearch = ({ filterKeyword, page, rowsPerPage, orderColumn, orderDirection }: SearchParameters) => {
+  const handleSearch = (searchParameters: SearchParameters) => {
     if (!config.backend.url) {
       throw new Error("No backend url specified");
     } else {
-      const urlParams = new URLSearchParams();
-      if (filterKeyword) {
-        urlParams.append('filter_keyword', filterKeyword);
-      }
-      if (page) {
-        urlParams.append('page', `${page}`);
-      }
-      if (rowsPerPage) {
-        urlParams.append('rows_per_page', `${rowsPerPage}`);
-      }
-      if (orderColumn) {
-        urlParams.append('order_column', orderColumn);
-      }
-      if (orderDirection) {
-        urlParams.append('order_direction', orderDirection);
-      }
+      const urlParams = composeSearchUrlParams(searchParameters);
       setLoading(true);
 
       fetch(`${config.backend.url}/bikes/search?${urlParams.toString()}`)

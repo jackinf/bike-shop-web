@@ -13,7 +13,7 @@ import SearchField from './SearchField';
 
 export default function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
   const classes = useToolbarStyles();
-  const { numSelected, total, everythingSelected, onSearchFieldChange, onSearchFieldKeyDown } = props;
+  const { label, numSelected, total, everythingSelected, onSearchFieldChange, onSearchFieldKeyDown } = props;
   const showSelectedNr = everythingSelected ? total - numSelected : numSelected;
 
   return (
@@ -29,7 +29,7 @@ export default function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
           </Typography>
         ) : (
           <Typography variant="h6" id="tableTitle">
-            Bikes
+            {label}
           </Typography>
         )}
       </div>

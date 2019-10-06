@@ -97,6 +97,12 @@ function Navbar({history}: any) {
             </ListItemIcon>
             <ListItemText primary="Bikes" />
           </ListItem>
+          <ListItem button key="BikeTypes" onClick={() => history.push('/bike-types')}>
+            <ListItemIcon>
+              <DirectionsBikeIcon />
+            </ListItemIcon>
+            <ListItemText primary="BikeTypes" />
+          </ListItem>
         </List>
         <Divider />
         <List>
