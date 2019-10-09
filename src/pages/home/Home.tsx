@@ -4,8 +4,6 @@ import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
 
 import config from '../../config';
 import { useStyles } from './styles';
@@ -47,34 +45,6 @@ export default function Home() {
           </GridListTile>
         ))}
       </GridList>
-
-      <Grid container spacing={3}>
-        {tileData.map((tile: Tile, i: number) => (
-          <Grid item xs={6} key={i}>
-            <Paper className={classes.paper}>
-              <Grid container>
-                <Grid xs={6}>
-                  Title: {tile.title}
-                </Grid>
-                <Grid xs={6}>
-                  Price: EUR {tile.selling_price}
-                </Grid>
-              </Grid>
-              <Grid container>
-                <Grid item xs={12}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                  >
-                    <ShoppingBasketIcon /> &nbsp; Into cart
-                  </Button>
-                </Grid>
-              </Grid>
-            </Paper>
-          </Grid>
-        ))}
-      </Grid>
     </div>
   );
 }
