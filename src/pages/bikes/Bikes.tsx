@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { withRouter } from 'react-router-dom'
 
-import { config } from '../../index';
+import config from '../../config';
 import BikesTable from './components/BikesTable/BikesTable';
 import { BikeSearchResult, BikesTableItem } from './components/BikesTable/types';
 import composeSearchUrlParams from '../../helpers/composeSearchUrlParams';
@@ -16,24 +16,20 @@ function Bikes(props: any) {
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleSearch = (searchParameters: SearchParameters) => {
-    if (!config.backend.url) {
-      throw new Error("No backend url specified");
-    } else {
-      const urlParams = composeSearchUrlParams(searchParameters);
-      setLoading(true);
+    setLoading(true);
 
-      const bikeTypeId = props.match.params["bike_type_id"];
+    const bikeTypeId = props.match.params["bike_type_id"];
+    const urlParams = composeSearchUrlParams(searchParameters);
 
-      fetch(`${config.backend.url}/bikes/search/${bikeTypeId}?${urlParams.toString()}`)
-        .then(resp => resp.json())
-        .then((resp: BikeSearchResult) => {
-          setItems(resp.items);
-          setTotal(resp.total)
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    }
+    fetch(config.endpoints.bikeTypes.searchBikes(bikeTypeId, urlParams.toString()))
+      .then(resp => resp.json())
+      .then((resp: BikeSearchResult) => {
+        setItems(resp.items);
+        setTotal(resp.total)
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   return (

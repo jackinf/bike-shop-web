@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { withRouter } from 'react-router-dom';
 
-import { config } from '../../index';
+import config from '../../config';
 import BikeTypesTable from './components/BikeTypesTable';
 import composeSearchUrlParams from '../../helpers/composeSearchUrlParams';
 import { SearchParameters } from '../../types';
@@ -16,22 +16,18 @@ function BikeTypes({history}: any) {
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleSearch = (searchParameters: SearchParameters) => {
-    if (!config.backend.url) {
-      throw new Error("No backend url specified");
-    } else {
-      const urlParams = composeSearchUrlParams(searchParameters);
-      setLoading(true);
+    setLoading(true);
+    const urlParams = composeSearchUrlParams(searchParameters);
 
-      fetch(`${config.backend.url}/bikes/search/bike-types?${urlParams.toString()}`)
-        .then(resp => resp.json())
-        .then((resp: BikeTypeSearchResult) => {
-          setItems(resp.items);
-          setTotal(resp.total)
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    }
+    fetch(config.endpoints.bikeTypes.search(urlParams.toString()))
+      .then(resp => resp.json())
+      .then((resp: BikeTypeSearchResult) => {
+        setItems(resp.items);
+        setTotal(resp.total)
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   return (

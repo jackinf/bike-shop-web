@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import firebase from 'firebase/app';
 
-import { config } from '../../index';
+import config from '../../config';
 import { ContextSettings, ErrorInfo } from './types';
 import { GoogleLoginResponse } from 'react-google-login';
 import isUserEqual from './isUserEqual';
