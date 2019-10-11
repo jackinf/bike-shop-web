@@ -1,0 +1,13 @@
+version: 2
+general:
+  branches:
+    only:
+    - master
+jobs:
+  build:
+    machine: true
+    steps:
+    - checkout
+    - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
+    - run: docker build -t stylehopper/bikeshop.web:latest .
+    - run: docker push stylehopper/bikeshop.web:latest
