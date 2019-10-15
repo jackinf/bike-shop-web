@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Container from '@material-ui/core/Container';
 
 import AuthProvider from './components/Auth';
@@ -25,10 +25,12 @@ const App: React.FC = () => {
             <main className={classes.content}>
               <div className={classes.toolbar} />
               <Container>
-                <Route exact path="/" component={Home} />
-                <Route exact path="/bikes/:bike_type_id" component={Bikes} />
-                <Route exact path="/bike-types" component={BikeTypes} />
-                <Route exact path="/account" component={Account} />
+                <Switch>
+                  <Route exact path="/" component={Home} />
+                  <Route exact path="/bikes/:bike_type_id" component={Bikes} />
+                  <Route exact path="/bike-types" component={BikeTypes} />
+                  <Route exact path="/account" component={Account} />
+                </Switch>
               </Container>
             </main>
           </div>
