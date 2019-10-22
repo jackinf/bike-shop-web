@@ -12,7 +12,8 @@
     "react-google-login": "^5.0.5",
     "react-router-dom": "^5.0.1",
     "react-scripts": "^3.1.1",
-    "typescript": "^3.6.3"
+    "typescript": "^3.6.3",
+    "moment": "^2.24.0"
   },
   "devDependencies": {
     "@types/firebase": "^3.2.1",

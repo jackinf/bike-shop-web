@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import firebase from 'firebase/app';
+import moment from 'moment';
 
 import config from '../../config';
 import { ContextSettings, ErrorInfo } from './types';
@@ -31,7 +32,10 @@ const AuthProvider = (props: Props) => {
   useEffect(() => {
     const unsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
       if (user) {
-        setToken(await user.getIdToken());
+        const token = await user.getIdToken();
+        const expirationDate = moment(user.metadata.lastSignInTime).add(1, 'hours');
+        console.log(`expirationDate: ${expirationDate}`);
+        setToken(token);
       } else {
         setToken("");
       }
