@@ -17,6 +17,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import HomeIcon from '@material-ui/icons/Home';
 import DirectionsBikeIcon from '@material-ui/icons/DirectionsBike';
+import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
 import SettingsIcon from '@material-ui/icons/Settings';
 
 import { AuthContext } from '../Auth/AuthProvider';
@@ -96,6 +97,12 @@ function Navbar({history}: any) {
               <DirectionsBikeIcon />
             </ListItemIcon>
             <ListItemText primary="Bikes" />
+          </ListItem>
+          <ListItem button key="Cart" onClick={() => history.push('/cart')}>
+            <ListItemIcon>
+              <ShoppingBasketIcon />
+            </ListItemIcon>
+            <ListItemText primary="In Cart" />
           </ListItem>
         </List>
         <Divider />

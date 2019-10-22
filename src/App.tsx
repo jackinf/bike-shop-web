@@ -6,6 +6,8 @@ import AuthProvider from './components/Auth';
 import Bikes from './pages/bikes';
 import BikeTypes from './pages/bike-types';
 import Account from './pages/account';
+import Cart from './pages/cart';
+import Checkout from './pages/checkout';
 import LoginLogout from './components/LoginLogout';
 import Navbar from './components/Navbar';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -30,6 +32,8 @@ const App: React.FC = () => {
                   <Route exact path="/bikes/:bike_type_id" component={Bikes} />
                   <Route exact path="/bike-types" component={BikeTypes} />
                   <Route exact path="/account" component={Account} />
+                  <Route exact path="/cart" component={Cart} />
+                  <Route exact path="/checkout" component={Checkout} />
                 </Switch>
               </Container>
             </main>
