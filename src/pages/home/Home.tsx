@@ -1,24 +1,33 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
+import { Button } from '@material-ui/core';
 
 import config from '../../config';
 import { useStyles } from './styles';
 import { Tile } from './types';
-import { Button } from '@material-ui/core';
+import { AuthContext } from '../../components/Auth/AuthProvider';
 
 export default function Home() {
   const classes = useStyles();
   const [tileData, setTileData] = useState<Tile[]>([]);
+  const authContext = useContext(AuthContext);
 
   useEffect(() => {
-    fetch(config.endpoints.bikes.search())
+    if (!authContext.token) {
+      return;
+    }
+    fetch(config.endpoints.bikes.search(), {
+      headers: {
+        'Authorization': `Bearer ${authContext.token}`
+      }
+    })
       .then(resp => resp.json())
       .then(resp => setTileData(resp.items));
-  }, []);
+  }, [authContext.token]);
 
   return (
     <div className={classes.root}>
@@ -38,7 +47,7 @@ export default function Home() {
                   color="primary"
                   className={classes.button}
                 >
-                  <ShoppingBasketIcon /> &nbsp; Into cart
+                  <ShoppingBasketIcon /> &nbsp; {tile.in_cart ? "In cart": "Into cart"}
                 </Button>
               }
             />

@@ -26,6 +26,9 @@ export default {
       add: () => `${backendUrl}/bikes/add`,
       update: () => `${backendUrl}/bikes/update`,
       remove: () => `${backendUrl}/bikes/remove`,
+    },
+    cart: {
+      getCartItems: () => `${backendUrl}/cart/current-user`
     }
   }
 }

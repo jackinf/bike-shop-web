@@ -3,4 +3,5 @@ export interface Tile {
   selling_price: number;
   stars: number;
   title: string;
+  in_cart: boolean;
 }
