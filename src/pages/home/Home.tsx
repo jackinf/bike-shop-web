@@ -37,42 +37,34 @@ export default function Home() {
   }, [getAllBikes, authContext.token]);
 
   const handleAddToCart = async (bikeId: string) => {
-    try {
-      await fetch(config.endpoints.cart.addToCart(bikeId), {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${authContext.token}`,
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify({a: 1, b: 'Textual content'})
-      });
+    await fetch(config.endpoints.cart.addToCart(bikeId), {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${authContext.token}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({a: 1, b: 'Textual content'})
+    });
 
-      getAllBikes()
-        .then(resp => resp.json())
-        .then(resp => setTileData(resp.items));
-    } catch {
-
-    }
+    getAllBikes()
+      .then(resp => resp.json())
+      .then(resp => setTileData(resp.items));
   };
 
   const handleRemoveFromCart = async (bikeId: string) => {
-    try {
-      await fetch(config.endpoints.cart.removeFromCart(bikeId), {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${authContext.token}`,
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        }
-      });
+    await fetch(config.endpoints.cart.removeFromCart(bikeId), {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${authContext.token}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    });
 
-      getAllBikes()
-        .then(resp => resp.json())
-        .then(resp => setTileData(resp.items));
-    } catch {
-
-    }
+    getAllBikes()
+      .then(resp => resp.json())
+      .then(resp => setTileData(resp.items));
   };
 
   return (
