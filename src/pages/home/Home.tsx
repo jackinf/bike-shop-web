@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useEffect, useContext, useCallback} from 'react';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
@@ -16,18 +16,64 @@ export default function Home() {
   const [tileData, setTileData] = useState<Tile[]>([]);
   const authContext = useContext(AuthContext);
 
+  const getAllBikes = useCallback(async () => {
+    return await fetch(config.endpoints.bikes.search(), {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${authContext.token}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    })
+  }, [authContext.token]);
+
   useEffect(() => {
     if (!authContext.token) {
       return;
     }
-    fetch(config.endpoints.bikes.search(), {
-      headers: {
-        'Authorization': `Bearer ${authContext.token}`
-      }
-    })
+    getAllBikes()
       .then(resp => resp.json())
       .then(resp => setTileData(resp.items));
-  }, [authContext.token]);
+  }, [getAllBikes, authContext.token]);
+
+  const handleAddToCart = async (bikeId: string) => {
+    try {
+      await fetch(config.endpoints.cart.addToCart(bikeId), {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${authContext.token}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({a: 1, b: 'Textual content'})
+      });
+
+      getAllBikes()
+        .then(resp => resp.json())
+        .then(resp => setTileData(resp.items));
+    } catch {
+
+    }
+  };
+
+  const handleRemoveFromCart = async (bikeId: string) => {
+    try {
+      await fetch(config.endpoints.cart.removeFromCart(bikeId), {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${authContext.token}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+      });
+
+      getAllBikes()
+        .then(resp => resp.json())
+        .then(resp => setTileData(resp.items));
+    } catch {
+
+    }
+  };
 
   return (
     <div className={classes.root}>
@@ -41,14 +87,25 @@ export default function Home() {
             <GridListTileBar
               title={tile.title}
               subtitle={<span>price: {tile.selling_price}</span>}
-              actionIcon={
+              actionIcon={tile.in_cart ? (
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  className={classes.button}
+                  onClick={() => handleRemoveFromCart(tile.id)}
+                >
+                  <ShoppingBasketIcon /> &nbsp; Remove from cart
+                </Button>
+                ) : (
                 <Button
                   variant="contained"
                   color="primary"
                   className={classes.button}
+                  onClick={() => handleAddToCart(tile.id)}
                 >
-                  <ShoppingBasketIcon /> &nbsp; {tile.in_cart ? "In cart": "Into cart"}
+                  <ShoppingBasketIcon /> &nbsp; Add into cart
                 </Button>
+              )
               }
             />
           </GridListTile>
