@@ -45,11 +45,12 @@ const AuthProvider = (props: Props) => {
   useEffect(() => {
     const unsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
       if (user) {
-        fetchToken(user, setTokenMetadata, setToken);
+        fetchToken(user, setTokenMetadata, setToken)
+          .then(() => setLoading(false));
       } else {
         setToken("");
+        setLoading(false);
       }
-      setLoading(false);
     });
 
     return () => {

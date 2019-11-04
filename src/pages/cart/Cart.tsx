@@ -6,12 +6,12 @@ import CartItem from './components/CartItem/CartItem';
 import { useStyles } from './styles';
 import { AuthContext } from '../../components/Auth/AuthProvider';
 import config from '../../config';
-import { CartItemType, GetCartItemsResponse } from './types';
+import { BackendCartItem, BackendCartItemResponse, CartItemResponse } from './types';
 
 function Cart({history}: any) {
   const classes = useStyles();
   const authContext = useContext(AuthContext);
-  const [cartItems, setCartItems] = useState<CartItemType[]>([]);
+  const [cartResponse, setCartResponse] = useState<CartItemResponse | undefined>(undefined);
 
   const getCartItems = useCallback(async () => {
     return await fetch(config.endpoints.cart.getCartItems(), {
@@ -24,19 +24,23 @@ function Cart({history}: any) {
     })
   }, [authContext.token]);
 
-  const mapCartItemsFromResponse = (response: { items: GetCartItemsResponse[] }) => {
-    return response.items.map((item: GetCartItemsResponse) => ({
-      bikeId: item.bike_id,
-      title: item.title,
-      image: item.image
-    }));
+  const mapCartItemsFromResponse = (response: BackendCartItemResponse): CartItemResponse => {
+    return {
+      items: response.items.map((item: BackendCartItem) => ({
+        bikeId: item.bike_id,
+        title: item.title,
+        image: item.image,
+        sellingPrice: item.selling_price
+      })),
+      totalSum: response.total_sum,
+    };
   };
 
   useEffect(() => {
     getCartItems()
       .then(resp => resp.json())
       .then(resp => mapCartItemsFromResponse(resp))
-      .then((items: CartItemType[]) => setCartItems(items));
+      .then((resp: CartItemResponse) => setCartResponse(resp));
   }, [getCartItems, authContext.token]);
 
   const handleRemoveFromCart = async (bikeId: string) => {
@@ -52,21 +56,28 @@ function Cart({history}: any) {
     getCartItems()
       .then(resp => resp.json())
       .then(resp => mapCartItemsFromResponse(resp))
-      .then((items: CartItemType[]) => setCartItems(items));
+      .then((resp: CartItemResponse) => setCartResponse(resp));
   };
+
+  if (cartResponse === undefined) {
+    return <div>Loading...</div>;
+  }
+
+  const { items, totalSum } = cartResponse;
 
   return (
     <div className={classes.root}>
       <h2>Shopping basket</h2>
 
-      {cartItems.map(cartItem => (
+      {items.map(cartItem => (
         <CartItem
-          bikeId={cartItem.bikeId}
-          title={cartItem.title}
-          image={cartItem.image}
+          key={cartItem.bikeId}
+          cartItem={cartItem}
           onRemoveFromCart={handleRemoveFromCart}
         />
       ))}
+
+      <h3>Total sum: €{totalSum}</h3>
 
       <Button
         className={classes.checkoutButton}
