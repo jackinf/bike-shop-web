@@ -13,6 +13,9 @@ export default {
   google: {
     clientId: process.env.REACT_APP_GOOGLE_CLIENT_ID
   },
+  stripe: {
+    apikey: process.env.REACT_APP_STRIPE_PUBLIC_API
+  },
   backend: {
     url: backendUrl
   },
@@ -31,6 +34,9 @@ export default {
       getCartItems: () => `${backendUrl}/carts/current-user`,
       addToCart: (bikeId: string) => `${backendUrl}/carts/current-user?bike_id=${bikeId}`,
       removeFromCart: (bikeId: string) => `${backendUrl}/carts/current-user?bike_id=${bikeId}`,
+    },
+    payments: {
+      startSession: () => `${backendUrl}/payments/start-session`
     }
   }
 }
