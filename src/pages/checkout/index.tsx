@@ -3,6 +3,7 @@ import { StripeProvider } from 'react-stripe-elements';
 import useScript from '../../hooks/useScript';
 import MyStoreCheckout from './stripe/MyStoreCheckout';
 import config from '../../config';
+import MyStandaloneStoreCheckout from './stripe/MyStandaloneStoreCheckout';
 
 export default function CheckoutEntry() {
   const [loaded, error] = useScript("https://js.stripe.com/v3/");
@@ -21,7 +22,11 @@ export default function CheckoutEntry() {
 
   return (
     <StripeProvider apiKey={config.stripe.apikey} >
-      <MyStoreCheckout />
+      <div>
+        <MyStoreCheckout />
+        <hr/>
+        <MyStandaloneStoreCheckout />
+      </div>
     </StripeProvider>
   )
 }

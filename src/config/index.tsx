@@ -1,5 +1,8 @@
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
+const paymentSuccessUrl = `${window.location.origin}/payment-success?session_id={CHECKOUT_SESSION_ID}`;
+const paymentCancelUrl = `${window.location.origin}/payment-success`;
+
 export default {
   firebase: {
     apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -36,7 +39,8 @@ export default {
       removeFromCart: (bikeId: string) => `${backendUrl}/carts/current-user?bike_id=${bikeId}`,
     },
     payments: {
-      startSession: () => `${backendUrl}/payments/start-session`
+      startSession: () => `${backendUrl}/payments/start-session`,
+      startStandaloneSession: () => `${backendUrl}/payments/start-standalone-session?success_url=${encodeURIComponent(paymentSuccessUrl)}&cancel_url=${encodeURIComponent(paymentCancelUrl)}`
     }
   }
 }
