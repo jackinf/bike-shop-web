@@ -34,6 +34,8 @@ const App: React.FC = () => {
                   <Route exact path="/account" component={Account} />
                   <Route exact path="/cart" component={Cart} />
                   <Route exact path="/checkout" component={Checkout} />
+                  <Route exact path="/payment-success" component={() => <h2>Success</h2>} />
+                  <Route exact path="/payment-cancelled" component={() => <h2>Cancelled</h2>} />
                 </Switch>
               </Container>
             </main>
