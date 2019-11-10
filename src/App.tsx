@@ -14,6 +14,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import useStyles from './useStyles';
 
 import Home from './pages/home';
+import Typography from '@material-ui/core/Typography';
 
 const App: React.FC = () => {
   const classes = useStyles();
@@ -34,7 +35,17 @@ const App: React.FC = () => {
                   <Route exact path="/account" component={Account} />
                   <Route exact path="/cart" component={Cart} />
                   <Route exact path="/checkout" component={Checkout} />
-                  <Route exact path="/payment-success" component={() => <h2>Success</h2>} />
+                  <Route exact path="/payment-success/:session_id" component={() => (
+                    <React.Fragment>
+                      <Typography variant="h5" gutterBottom>
+                        Thank you for your order.
+                      </Typography>
+                      <Typography variant="subtitle1">
+                        Your order number is #2001539. We have emailed your order confirmation, and will
+                        send you an update when your order has shipped.
+                      </Typography>
+                    </React.Fragment>
+                  )} />
                   <Route exact path="/payment-cancelled" component={() => <h2>Cancelled</h2>} />
                 </Switch>
               </Container>

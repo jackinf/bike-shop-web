@@ -5,7 +5,7 @@ import config from '../../../config';
 import { Button } from '@material-ui/core';
 import { AuthContext } from '../../../components/Auth/AuthProvider';
 
-function MyStandaloneStoreCheckout(props: ReactStripeElements.InjectedStripeProps) {
+function MyStandaloneStoreCheckout(props: ReactStripeElements.InjectedStripeProps & { className?: any}) {
   const authContext = useContext(AuthContext);
   const { stripe } = props;
 
@@ -35,18 +35,18 @@ function MyStandaloneStoreCheckout(props: ReactStripeElements.InjectedStripeProp
   };
 
   return (
-    <Button color="primary" variant="contained" onClick={() => handleStartPayment()}>
-      Go to external checkout page
+    <Button color="primary" variant="contained" onClick={() => handleStartPayment()} className={props.className}>
+      Pay
     </Button>
   )
 }
 
 const Injected = injectStripe(MyStandaloneStoreCheckout);
 
-export default function Wrapper() {
+export default function Wrapper(props: { className?: any}) {
   return (
     <Elements>
-      <Injected />
+      <Injected className={props.className} />
     </Elements>
   )
 }

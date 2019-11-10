@@ -1,6 +1,6 @@
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-const paymentSuccessUrl = `${window.location.origin}/payment-success?session_id={CHECKOUT_SESSION_ID}`;
+const paymentSuccessUrl = `${window.location.origin}/payment-success/session_id={CHECKOUT_SESSION_ID}`;
 const paymentCancelUrl = `${window.location.origin}/payment-cancelled`;
 
 export default {
