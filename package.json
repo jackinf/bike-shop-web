@@ -7,7 +7,7 @@
     "@material-ui/icons": "^4.4.1",
     "@material-ui/lab": "^4.0.0-alpha.27",
     "firebase": "^6.6.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-google-login": "^5.0.5",
